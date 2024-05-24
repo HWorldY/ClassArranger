@@ -5,6 +5,8 @@
 #pragma once
 #include"CSchedule.h"
 #include"CSButton.h"
+#include"CDutyDisplay.h"
+#include"CDButton.h"
 #include"Settings.h"
 // CClassArrangerDlg 对话框
 class CClassArrangerDlg : public CDialogEx
@@ -29,13 +31,17 @@ protected:
 	CBrush m_oldbrush;
 	CFont m_font;
 	CSchedule m_schedule;
+	CDutyDisplay m_duty;
+	CDButton m_dbutton;
 	CSButton m_sbutton;
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	BOOL MoveCtrl(int x, int y);
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnEnChangeEdit1();
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg LRESULT OnUpdateCString(WPARAM w, LPARAM l);// 自定义消息处理函数
 };

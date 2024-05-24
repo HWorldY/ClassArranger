@@ -1,13 +1,14 @@
 #pragma once
-#define ClassName2  _T("CSButton")
-
-class CSButton :
+#define ClassName4  _T("CDButton")
+#include"DutyDlg.h"
+class CDButton :
 	public CWnd {
 public:
-	CSButton();
-	~CSButton();
+	CDButton();
+	~CDButton();
+	DECLARE_DYNAMIC(CDButton);
+	DutyDlg dutydlg;
 	CFont m_font;
-	DECLARE_DYNAMIC(CSButton);
 protected:
 	DECLARE_MESSAGE_MAP()
 	BOOL RegisterWindowClass();

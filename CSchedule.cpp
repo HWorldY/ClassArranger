@@ -3,6 +3,7 @@
 #include "resource.h"
 #include"Transparent.h"
 #include"Lessons.h"
+#include"StrConvert.h"
 IMPLEMENT_DYNAMIC(CSchedule, CWnd)
 BEGIN_MESSAGE_MAP(CSchedule, CWnd)
     ON_WM_PAINT()
@@ -11,25 +12,33 @@ END_MESSAGE_MAP()
 
 CSchedule::CSchedule()
 {
-    CSchedule::RegisterWindowClass(); 
     CTime time = CTime::GetCurrentTime();
     CString str = time.Format("%w");
     int week = ((str == "0") ? 7 : str == "1" ? 1 : str == "2" ? 2 : str == "3" ?
-        3 : str == "4" ? 4 : str == "5" ? 5 : str == "6" ? 6 : 0)-1;
-    for (int m = 0; m <= 10; m++) {
-        m_lstr[m] = LESSONS[week][m];//RGB(255, 0, 0);
-    }
+        3 : str == "4" ? 4 : str == "5" ? 5 : str == "6" ? 6 : 1)-1;
+
+    CSchedule::RegisterWindowClass();
+    CString BPath(RELATIVEPATH?L"D://cpp//P//Projects//ClassArranger//x64//Release//":L"");//在setting中更改RELATIVEPATH以调试
+    CString FilePath=BPath+str + ".txt"; //此处可换成绝对路径
+    CFile file;
+    file.Open(FilePath, CFile::modeRead);
+    INT size = file.GetLength();
+    char* buffer = new char[size + 1];
+    file.Read(buffer, size * sizeof(char));
+    CString cont=AnsiToUnicode(buffer);
+    ReadStrings(cont, m_lstr,11);
+
     m_lnum = 11;
-    m_lheight = 25*SCALE;
-    m_lwidth = WINDOW_WIDTH * SCALE;
-    m_lbheight = 5 * SCALE;
+    m_lheight = 35;
+    m_lwidth = WINDOW_WIDTH ;
+    m_lbheight = 8;
     for (int m = 1; m <= 11; m++) {
-        m_lcolor[m] = COLOR_2;//RGB(255, 0, 0);
+        m_lcolor[m] = COLOR_YELLOW;
     }
-    m_lcolor[0] = RGB(150, 150, 150);
-    m_lcolor[6] = RGB(150, 150, 150);
+    m_lcolor[0] = COLOR_GRAY;
+    m_lcolor[6] = COLOR_GRAY;
     LOGFONT lf = {};
-    lf.lfHeight = TEXT_SIZE * SCALE;
+    lf.lfHeight = 30;
     lf.lfWidth = 0;
     lf.lfEscapement = 0;
     lf.lfOrientation = 0;
@@ -80,7 +89,7 @@ void CSchedule::OnPaint()
     int hpos = 0; 
         dc.SelectObject(m_lfont);
         dc.SetBkColor(TRANSPARENT);
-        dc.SetTextColor(TEXTCOLOR_ACTIVE);
+        dc.SetTextColor(COLOR_BLACK);
     for (int m = 0; m <= m_lnum - 1; m++) {
         dc.FillSolidRect(0, hpos, m_lwidth, m_lheight,m_lcolor[m]);
         CRect rt(0, hpos, m_lwidth, hpos + m_lheight);

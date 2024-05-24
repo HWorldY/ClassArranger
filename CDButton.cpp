@@ -1,16 +1,16 @@
 #include"pch.h"
-#include"CSButton.h"
+#include"CDButton.h"
 #include"resource.h"
 #include"Settings.h"
-IMPLEMENT_DYNAMIC(CSButton, CWnd)
-BEGIN_MESSAGE_MAP(CSButton, CWnd)
+IMPLEMENT_DYNAMIC(CDButton, CWnd)
+BEGIN_MESSAGE_MAP(CDButton, CWnd)
     ON_WM_PAINT()
     ON_WM_ERASEBKGND()
     ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
-CSButton::CSButton()
+CDButton::CDButton()
 {
-    CSButton::RegisterWindowClass(); 
+    CDButton::RegisterWindowClass();
 
     LOGFONT lf = {};
     lf.lfHeight = SBUTTON_HEIGHT/1.5;
@@ -30,15 +30,15 @@ CSButton::CSButton()
     m_font.CreateFontIndirect(&lf);
 }
 
-CSButton::~CSButton()
+CDButton::~CDButton()
 {
 }
 
-BOOL CSButton::RegisterWindowClass()
+BOOL CDButton::RegisterWindowClass()
 {
     WNDCLASS windowclass;
     HINSTANCE hInstance = AfxGetInstanceHandle();
-    if (!(::GetClassInfo(hInstance, ClassName2, &windowclass))) {
+    if (!(::GetClassInfo(hInstance, ClassName4, &windowclass))) {
         windowclass.style = CS_DBLCLKS;
         windowclass.lpfnWndProc = ::DefWindowProc;
         windowclass.cbClsExtra = windowclass.cbWndExtra = 0;
@@ -47,7 +47,7 @@ BOOL CSButton::RegisterWindowClass()
         windowclass.hCursor = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
         windowclass.hbrBackground = ::GetSysColorBrush(COLOR_WINDOW);
         windowclass.lpszMenuName = NULL;
-        windowclass.lpszClassName = ClassName2;
+        windowclass.lpszClassName = ClassName4;
         if (!AfxRegisterClass(&windowclass))
         {
             AfxThrowResourceException();
@@ -56,20 +56,20 @@ BOOL CSButton::RegisterWindowClass()
     }
     return true;
 }
-void CSButton::OnPaint()
+void CDButton::OnPaint()
 {
     CPaintDC dc(this);
     dc.SelectObject(m_font);
     CRect rt;
     this->GetClientRect(rt);
     dc.FillSolidRect(rt, RGB(200, 200, 200));
-    dc.DrawText(L"课程表", rt, DT_LEFT);
+    dc.DrawText(L"值日生", rt, DT_LEFT);
     // TODO: 在此处添加消息处理程序代码
     // 不为绘图消息调用 CWnd::OnPaint()
 }
 
 
-BOOL CSButton::OnEraseBkgnd(CDC* pDC)
+BOOL CDButton::OnEraseBkgnd(CDC* pDC)
 {
     //return true;
     return CWnd::OnEraseBkgnd(pDC);
@@ -77,19 +77,18 @@ BOOL CSButton::OnEraseBkgnd(CDC* pDC)
 }
 
 
-void CSButton::OnLButtonDown(UINT nFlags, CPoint point)
+void CDButton::OnLButtonDown(UINT nFlags, CPoint point)
 {
     // TODO: 在此添加消息处理程序代码和/或调用默认值
 
-    CWnd::OnLButtonDown(nFlags, point); 
+    CWnd::OnLButtonDown(nFlags, point);
     CRect rect;
     GetClientRect(rect);
     //判断鼠标的位置是否在控件里面
     if (rect.PtInRect(point))
     {
         //GetParent()->DestroyWindow();
-        int re=::MessageBox(this->GetParent()->GetSafeHwnd(), L"关闭", L"退出", MB_OKCANCEL);
-        if (re == IDOK)this->GetParent()->DestroyWindow();
+        if(dutydlg.DoModal()==1)this->GetParent()->PostMessage(WM_GET_DIALOG_CSTRING, (long long int)&dutydlg.m_dstr, 0);
     }
 
 }

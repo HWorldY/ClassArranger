@@ -28,14 +28,18 @@ CClassArrangerDlg::CClassArrangerDlg(CWnd* pParent /*=nullptr*/)
 void CClassArrangerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_Schedule, m_schedule);
-	DDX_Control(pDX, IDC_SBUTTON, m_sbutton);
+	DDX_Control(pDX, IDC_CSCHEDULE, m_schedule);
+	DDX_Control(pDX, IDC_CSBUTTON, m_sbutton);
+	DDX_Control(pDX, IDC_CDBUTTON, m_dbutton);
+	DDX_Control(pDX, IDC_CDUTYDISPLAY, m_duty); \
 }
 
 BEGIN_MESSAGE_MAP(CClassArrangerDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_WM_CTLCOLOR()  
+	ON_WM_CTLCOLOR()
+	ON_WM_ERASEBKGND()
+	ON_MESSAGE(WM_GET_DIALOG_CSTRING, &CClassArrangerDlg::OnUpdateCString)// 自定义消息处理函数)
 END_MESSAGE_MAP()
 
 
@@ -43,20 +47,23 @@ END_MESSAGE_MAP()
 
 BOOL CClassArrangerDlg::OnInitDialog()
 {
-	CDialogEx::OnInitDialog(); 
-	SetWindowLong(this->m_hWnd, GWL_EXSTYLE, GetWindowLong(this->m_hWnd, GWL_EXSTYLE) | WS_EX_LAYERED&(~WS_CAPTION));//要使使窗体拥有透明效果,首先要有WS_EX_LAYERED扩展属性// 让本程序不在任务栏显示(创建一个工具条窗口)
+	CDialogEx::OnInitDialog();
+	SetWindowLong(this->m_hWnd, GWL_EXSTYLE, GetWindowLong(this->m_hWnd, GWL_EXSTYLE) | WS_EX_LAYERED & (~WS_CAPTION));//要使使窗体拥有透明效果,首先要有WS_EX_LAYERED扩展属性// 让本程序不在任务栏显示(创建一个工具条窗口)
 	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);
 	SetLayeredWindowAttributes(TRANSPARENT_COLOR_THROUGH, TRANSPARENCY, TRANSPARENT_MODE);
-	//MessageBox(L"?");
+
 	CRect rc;
 	GetDesktopWindow()->GetWindowRect(rc);
 	SetWindowText((CString)"CA");
-	SetWindowPos(&wndBottom,rc.right-WINDOW_WIDTH-50,rc.top,WINDOW_WIDTH,WINDOW_HEIGHT,0);
+	SetWindowPos(&wndBottom, rc.right - WINDOW_WIDTH - 50, rc.top+50, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
+	CRect wrc;
+	GetClientRect(wrc);
+	MoveCtrl(wrc.right, wrc.bottom);
 	// TODO: 在此添加额外的初始化代码
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -99,6 +106,23 @@ HCURSOR CClassArrangerDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+BOOL CClassArrangerDlg::MoveCtrl(int x, int y)
+{
+	if (IsWindow(m_schedule.m_hWnd)) {
+		m_schedule.MoveWindow(0, DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON+ SBUTTON_HEIGHT+SBUTTON_SCHEDULE, x, SCHEDULE_HEIGHT);
+	}
+	if (IsWindow(m_dbutton.m_hWnd)) {
+		m_dbutton.MoveWindow(0, 0, 43, DBUTTON_HEIGHT);
+	}
+	if (IsWindow(m_duty.m_hWnd)) {
+		m_duty.MoveWindow(0, DBUTTON_HEIGHT + DBUTTON_DUTY, x, DUTY_HEIGHT);
+	}
+	if (IsWindow(m_sbutton.m_hWnd)) {
+		m_sbutton.MoveWindow(0, DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON, 43, SBUTTON_HEIGHT);
+	}
+	return true;
+}
+
 
 
 HBRUSH CClassArrangerDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
@@ -110,26 +134,32 @@ HBRUSH CClassArrangerDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		pDC->SetBkMode(TRANSPARENT);
 		return m_brush;
 	}
-	if (wnd == IDC_Schedule)
+	if (wnd == IDC_CSCHEDULE)
 	{
 		return m_brush;
 	}
-	if (wnd == IDC_SBUTTON)
+	if (wnd == IDC_CSBUTTON)
 	{
 		return hbr;
 	}
+	if (wnd == IDC_CDUTYDISPLAY) {
 		return m_brush;
+	}
+	return m_brush;
 	return hbr;
-		// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
 }
 
 
-void CClassArrangerDlg::OnEnChangeEdit1()
+BOOL CClassArrangerDlg::OnEraseBkgnd(CDC* pDC)
 {
-	// TODO:  如果该控件是 RICHEDIT 控件，它将不
-	// 发送此通知，除非重写 CDialogEx::OnInitDialog()
-	// 函数并调用 CRichEditCtrl().SetEventMask()，
-	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
 
-	// TODO:  在此添加控件通知处理程序代码
+	return true;
+}
+
+LRESULT CClassArrangerDlg::OnUpdateCString(WPARAM w, LPARAM l)
+{
+	this->m_duty.PostMessage(WM_GET_DIALOG_CSTRING, w, 0);
+	return 1;
 }
