@@ -3,10 +3,10 @@
 //
 
 #include "pch.h"
-#include "framework.h"
+#include "afxdialogex.h"
 #include "ClassArranger.h"
 #include "ClassArrangerDlg.h"
-#include "afxdialogex.h"
+#include "framework.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -14,8 +14,25 @@
 
 
 // CClassArrangerDlg 对话框
+void CClassArrangerDlg::OnOK()
+{
+		    // TODO: 在此添加专用代码和/或调用基类  
+		
+			    //CDialog::OnOK();  
+		
+}
 
-
+BOOL CClassArrangerDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类  
+	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE)
+	{
+		//将ESC键的消息替换为回车键的消息，这样，按ESC的时候  
+				//也会和回车键一样去调用OnOK函数，而OnOK什么也不做，这样ESC也被屏蔽  
+		pMsg->wParam = VK_RETURN;
+	}
+	return CDialog::PreTranslateMessage(pMsg);
+}
 
 CClassArrangerDlg::CClassArrangerDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CLASSARRANGER_DIALOG, pParent)
@@ -68,7 +85,7 @@ BOOL CClassArrangerDlg::OnInitDialog()
 	CRect rc;
 	GetDesktopWindow()->GetWindowRect(rc);
 	SetWindowText((CString)"CA");
-	SetWindowPos(&wndBottom, rc.right - WINDOW_WIDTH - 50, rc.top+50, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+	SetWindowPos(&wndBottom, rc.right - WINDOW_WIDTH - 50, rc.top + 50, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
@@ -121,20 +138,20 @@ HCURSOR CClassArrangerDlg::OnQueryDragIcon()
 
 BOOL CClassArrangerDlg::MoveCtrl(int x, int y)
 {
-	if (IsWindow(m_cm.m_hWnd) ){
+	if (IsWindow(m_cm.m_hWnd)) {
 		m_dbutton.MoveWindow(0, 0, 43, NAME_HEIGHT);
 	}
 	if (IsWindow(m_schedule->m_hWnd)) {
-		m_schedule->MoveWindow(0, NAME_HEIGHT+NAME_DBUTTON+DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON+ SBUTTON_HEIGHT+SBUTTON_SCHEDULE, x, SCHEDULE_HEIGHT);
+		m_schedule->MoveWindow(0, NAME_HEIGHT + NAME_DBUTTON + DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON + SBUTTON_HEIGHT + SBUTTON_SCHEDULE, x, SCHEDULE_HEIGHT);
 	}
 	if (IsWindow(m_dbutton.m_hWnd)) {
-		m_dbutton.MoveWindow(0, NAME_HEIGHT+ NAME_DBUTTON, 43, DBUTTON_HEIGHT);
+		m_dbutton.MoveWindow(0, NAME_HEIGHT + NAME_DBUTTON, 43, DBUTTON_HEIGHT);
 	}
 	if (IsWindow(m_duty->m_hWnd)) {
-		m_duty->MoveWindow(0, NAME_HEIGHT+NAME_DBUTTON+DBUTTON_HEIGHT + DBUTTON_DUTY, x, DUTY_HEIGHT);
+		m_duty->MoveWindow(0, NAME_HEIGHT + NAME_DBUTTON + DBUTTON_HEIGHT + DBUTTON_DUTY, x, DUTY_HEIGHT);
 	}
 	if (IsWindow(m_sbutton.m_hWnd)) {
-		m_sbutton.MoveWindow(0, NAME_HEIGHT+NAME_DBUTTON+DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON, 43, SBUTTON_HEIGHT);
+		m_sbutton.MoveWindow(0, NAME_HEIGHT + NAME_DBUTTON + DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON, 43, SBUTTON_HEIGHT);
 	}
 	return true;
 }

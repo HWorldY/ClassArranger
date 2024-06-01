@@ -24,8 +24,7 @@ public:
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
-
-
+	BOOL PreTranslateMessage(MSG* pMsg);
 // 实现
 protected:
 	Settings* m_set;
@@ -48,4 +47,5 @@ public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg LRESULT OnUpdateCString(WPARAM w, LPARAM l);// 自定义消息处理函数
+	afx_msg void OnOK();
 };
