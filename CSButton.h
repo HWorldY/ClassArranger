@@ -1,5 +1,5 @@
 #pragma once
-#define ClassName2  _T("CSButton")
+#define CName2  _T("CSButton")
 
 class CSButton :
 	public CWnd {

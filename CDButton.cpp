@@ -38,7 +38,7 @@ BOOL CDButton::RegisterWindowClass()
 {
     WNDCLASS windowclass;
     HINSTANCE hInstance = AfxGetInstanceHandle();
-    if (!(::GetClassInfo(hInstance, ClassName4, &windowclass))) {
+    if (!(::GetClassInfo(hInstance, CName4, &windowclass))) {
         windowclass.style = CS_DBLCLKS;
         windowclass.lpfnWndProc = ::DefWindowProc;
         windowclass.cbClsExtra = windowclass.cbWndExtra = 0;
@@ -47,7 +47,7 @@ BOOL CDButton::RegisterWindowClass()
         windowclass.hCursor = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
         windowclass.hbrBackground = ::GetSysColorBrush(COLOR_WINDOW);
         windowclass.lpszMenuName = NULL;
-        windowclass.lpszClassName = ClassName4;
+        windowclass.lpszClassName = CName4;
         if (!AfxRegisterClass(&windowclass))
         {
             AfxThrowResourceException();

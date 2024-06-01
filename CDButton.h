@@ -1,5 +1,5 @@
 #pragma once
-#define ClassName4  _T("CDButton")
+#define CName4  _T("CDButton")
 #include"DutyDlg.h"
 class CDButton :
 	public CWnd {

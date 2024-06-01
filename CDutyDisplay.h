@@ -1,5 +1,6 @@
 #pragma once
-#define ClassName3  _T("CDutyDisplay")
+#include"Settings.h"
+#define CName3  _T("CDutyDisplay")
 
 class CDutyDisplay :
 	public CWnd {
@@ -9,7 +10,8 @@ public:
 	int m_dwidth;
 	COLORREF m_dcolor;
 	CString m_dstr;
-	CDutyDisplay();
+	Settings* m_set;
+	CDutyDisplay(Settings* set);
 	~CDutyDisplay();
 	DECLARE_DYNAMIC(CDutyDisplay);
 protected:

@@ -20,18 +20,31 @@
 CClassArrangerDlg::CClassArrangerDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_CLASSARRANGER_DIALOG, pParent)
 {
+	CString Path(RELATIVEPATH ? L"D://cpp//P//Projects//ClassArranger//x64//Release//Settings.txt" : L"Settings.txt");//在setting中更改RELATIVEPATH以调试
+	m_set = new Settings(Path, L'[', L']', L"[*:*]");
+	m_schedule = new CSchedule(m_set);
+	m_duty = new CDutyDisplay(m_set);
+	m_cm.m_set = m_set;
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_brush.CreateSolidBrush(TRANSPARENT_COLOR_THROUGH);
 	m_oldbrush.CreateSolidBrush(RGB(0, 0, 0));
 }
 
+CClassArrangerDlg::~CClassArrangerDlg()
+{
+	delete m_set;
+	delete m_schedule;
+	delete m_duty;
+}
+
 void CClassArrangerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_CSCHEDULE, m_schedule);
+	DDX_Control(pDX, IDC_CSCHEDULE, *m_schedule);
 	DDX_Control(pDX, IDC_CSBUTTON, m_sbutton);
 	DDX_Control(pDX, IDC_CDBUTTON, m_dbutton);
-	DDX_Control(pDX, IDC_CDUTYDISPLAY, m_duty); \
+	DDX_Control(pDX, IDC_CDUTYDISPLAY, *m_duty);
+	DDX_Control(pDX, IDC_NAMEDISPLAY, m_cm);
 }
 
 BEGIN_MESSAGE_MAP(CClassArrangerDlg, CDialogEx)
@@ -108,17 +121,20 @@ HCURSOR CClassArrangerDlg::OnQueryDragIcon()
 
 BOOL CClassArrangerDlg::MoveCtrl(int x, int y)
 {
-	if (IsWindow(m_schedule.m_hWnd)) {
-		m_schedule.MoveWindow(0, DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON+ SBUTTON_HEIGHT+SBUTTON_SCHEDULE, x, SCHEDULE_HEIGHT);
+	if (IsWindow(m_cm.m_hWnd) ){
+		m_dbutton.MoveWindow(0, 0, 43, NAME_HEIGHT);
+	}
+	if (IsWindow(m_schedule->m_hWnd)) {
+		m_schedule->MoveWindow(0, NAME_HEIGHT+NAME_DBUTTON+DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON+ SBUTTON_HEIGHT+SBUTTON_SCHEDULE, x, SCHEDULE_HEIGHT);
 	}
 	if (IsWindow(m_dbutton.m_hWnd)) {
-		m_dbutton.MoveWindow(0, 0, 43, DBUTTON_HEIGHT);
+		m_dbutton.MoveWindow(0, NAME_HEIGHT+ NAME_DBUTTON, 43, DBUTTON_HEIGHT);
 	}
-	if (IsWindow(m_duty.m_hWnd)) {
-		m_duty.MoveWindow(0, DBUTTON_HEIGHT + DBUTTON_DUTY, x, DUTY_HEIGHT);
+	if (IsWindow(m_duty->m_hWnd)) {
+		m_duty->MoveWindow(0, NAME_HEIGHT+NAME_DBUTTON+DBUTTON_HEIGHT + DBUTTON_DUTY, x, DUTY_HEIGHT);
 	}
 	if (IsWindow(m_sbutton.m_hWnd)) {
-		m_sbutton.MoveWindow(0, DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON, 43, SBUTTON_HEIGHT);
+		m_sbutton.MoveWindow(0, NAME_HEIGHT+NAME_DBUTTON+DBUTTON_HEIGHT + DBUTTON_DUTY + DUTY_HEIGHT + DUTY_SBUTTON, 43, SBUTTON_HEIGHT);
 	}
 	return true;
 }
@@ -160,6 +176,6 @@ BOOL CClassArrangerDlg::OnEraseBkgnd(CDC* pDC)
 
 LRESULT CClassArrangerDlg::OnUpdateCString(WPARAM w, LPARAM l)
 {
-	this->m_duty.PostMessage(WM_GET_DIALOG_CSTRING, w, 0);
+	this->m_duty->PostMessage(WM_GET_DIALOG_CSTRING, w, 0);
 	return 1;
 }

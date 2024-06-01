@@ -7,8 +7,9 @@ BEGIN_MESSAGE_MAP(CDutyDisplay, CWnd)
     ON_WM_PAINT()
     ON_MESSAGE(WM_GET_DIALOG_CSTRING, OnUpdateCString)
 END_MESSAGE_MAP()
-CDutyDisplay::CDutyDisplay()
+CDutyDisplay::CDutyDisplay(Settings* set)
 {
+    this->m_set = set;
     CDutyDisplay::RegisterWindowClass();
    
     m_dcolor= COLOR_YELLOW;//RGB(255, 0, 0);
@@ -28,7 +29,7 @@ CDutyDisplay::CDutyDisplay()
     lf.lfPitchAndFamily = DEFAULT_PITCH;
     wcscpy_s(lf.lfFaceName, L"宋体");
     m_dfont.CreateFontIndirect(&lf);
-    m_dstr = L"你好";
+    m_dstr = set->GetSetting(L"值日生")[1];
 }
 
 CDutyDisplay::~CDutyDisplay()
@@ -39,7 +40,7 @@ BOOL CDutyDisplay::RegisterWindowClass()
 {
     WNDCLASS windowclass;
     HINSTANCE hInstance = AfxGetInstanceHandle();
-    if (!(::GetClassInfo(hInstance, ClassName3, &windowclass))) {
+    if (!(::GetClassInfo(hInstance, CName3, &windowclass))) {
         windowclass.style = CS_DBLCLKS;
         windowclass.lpfnWndProc = ::DefWindowProc;
         windowclass.cbClsExtra = windowclass.cbWndExtra = 0;
@@ -48,7 +49,7 @@ BOOL CDutyDisplay::RegisterWindowClass()
         windowclass.hCursor = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
         windowclass.hbrBackground = ::GetSysColorBrush(COLOR_WINDOW);
         windowclass.lpszMenuName = NULL;
-        windowclass.lpszClassName = ClassName3;
+        windowclass.lpszClassName = CName3;
         if (!AfxRegisterClass(&windowclass))
         {
             AfxThrowResourceException();
@@ -73,6 +74,8 @@ void CDutyDisplay::OnPaint()
 }
 LRESULT CDutyDisplay::OnUpdateCString(WPARAM w, LPARAM l) {
     m_dstr = *((CString*)w);
+    this->m_set->DName = m_dstr;
+    this->m_set->SaveSettings();
     Invalidate(1);
     return 1;
 }

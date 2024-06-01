@@ -8,12 +8,14 @@
 #include"CDutyDisplay.h"
 #include"CDButton.h"
 #include"Settings.h"
+#include"NameDisplay.h"
 // CClassArrangerDlg 对话框
 class CClassArrangerDlg : public CDialogEx
 {
 // 构造
 public:
 	CClassArrangerDlg(CWnd* pParent = nullptr);	// 标准构造函数
+	~CClassArrangerDlg();
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
@@ -26,14 +28,16 @@ public:
 
 // 实现
 protected:
+	Settings* m_set;
 	HICON m_hIcon;
 	CBrush m_brush;
 	CBrush m_oldbrush;
 	CFont m_font;
-	CSchedule m_schedule;
-	CDutyDisplay m_duty;
+	CSchedule* m_schedule;
+	CDutyDisplay* m_duty;
 	CDButton m_dbutton;
 	CSButton m_sbutton;
+	NameDisplay m_cm;
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();

@@ -10,13 +10,14 @@ BEGIN_MESSAGE_MAP(CSchedule, CWnd)
     ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
-CSchedule::CSchedule()
+CSchedule::CSchedule(Settings* set)
 {
+    m_set = set;
     CTime time = CTime::GetCurrentTime();
     CString str = time.Format("%w");
     int week = ((str == "0") ? 7 : str == "1" ? 1 : str == "2" ? 2 : str == "3" ?
         3 : str == "4" ? 4 : str == "5" ? 5 : str == "6" ? 6 : 1)-1;
-
+    if (this->m_set->ScheduleChoice != 8)str.Format(L"%d", this->m_set->ScheduleChoice);
     CSchedule::RegisterWindowClass();
     CString BPath(RELATIVEPATH?L"D://cpp//P//Projects//ClassArranger//x64//Release//":L"");//在setting中更改RELATIVEPATH以调试
     CString FilePath=BPath+str + ".txt"; //此处可换成绝对路径
@@ -63,7 +64,7 @@ BOOL CSchedule::RegisterWindowClass()
 {
     WNDCLASS windowclass;
     HINSTANCE hInstance = AfxGetInstanceHandle();
-    if (!(::GetClassInfo(hInstance, ClassName, &windowclass))) {
+    if (!(::GetClassInfo(hInstance, CName, &windowclass))) {
         windowclass.style = CS_DBLCLKS;
         windowclass.lpfnWndProc = ::DefWindowProc;
         windowclass.cbClsExtra = windowclass.cbWndExtra = 0;
@@ -72,7 +73,7 @@ BOOL CSchedule::RegisterWindowClass()
         windowclass.hCursor = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
         windowclass.hbrBackground = ::GetSysColorBrush(COLOR_WINDOW);
         windowclass.lpszMenuName = NULL;
-        windowclass.lpszClassName = ClassName;
+        windowclass.lpszClassName = CName;
         if (!AfxRegisterClass(&windowclass))
         {
             AfxThrowResourceException();

@@ -7,6 +7,7 @@
 #include "DutyDlg.h"
 #include "StrConvert.h"
 #include"Settings.h"
+#include"SettingsDlg.h"
 // DutyDlg 对话框
 
 IMPLEMENT_DYNAMIC(DutyDlg, CDialogEx)
@@ -42,3 +43,5 @@ void DutyDlg::OnBnClickedButton()
 	EndDialog(1);
 	// TODO: 在此添加控件通知处理程序代码
 }
+
+
