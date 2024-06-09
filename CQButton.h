@@ -1,17 +1,16 @@
 #pragma once
-#define CName4  _T("CDButton")
+#define CName6  _T("CQButton")
 #include"Settings.h"
-#include"DutyDlg.h"
-class CDButton :
+#include"pch.h"
+#include"QuitDlg.h"
+class CQButton :
 	public CWnd {
 public:
-	CDButton(Settings* settings);
-	~CDButton();
-	DECLARE_DYNAMIC(CDButton);
-public:
-	DutyDlg dutydlg;
+	CQButton();
+	~CQButton();
+	DECLARE_DYNAMIC(CQButton);
+	QuitDlg quitdlg;
 	CFont m_font;
-	Settings* m_set;
 protected:
 	DECLARE_MESSAGE_MAP()
 	BOOL RegisterWindowClass();

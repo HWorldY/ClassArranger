@@ -1,19 +1,19 @@
+#include"CQButton.h"
 #include"pch.h"
-#include"CSButton.h"
 #include"resource.h"
 #include"Settings.h"
-IMPLEMENT_DYNAMIC(CSButton, CWnd)
-BEGIN_MESSAGE_MAP(CSButton, CWnd)
+IMPLEMENT_DYNAMIC(CQButton, CWnd)
+BEGIN_MESSAGE_MAP(CQButton, CWnd)
     ON_WM_PAINT()
     ON_WM_ERASEBKGND()
     ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
-CSButton::CSButton()
+CQButton::CQButton()
 {
-    CSButton::RegisterWindowClass(); 
+    CQButton::RegisterWindowClass();
 
     LOGFONT lf = {};
-    lf.lfHeight = SBUTTON_HEIGHT/1.5;
+    lf.lfHeight = SBUTTON_HEIGHT / 1.5;
     lf.lfWidth = 0;
     lf.lfEscapement = 0;
     lf.lfOrientation = 0;
@@ -30,15 +30,15 @@ CSButton::CSButton()
     m_font.CreateFontIndirect(&lf);
 }
 
-CSButton::~CSButton()
+CQButton::~CQButton()
 {
 }
 
-BOOL CSButton::RegisterWindowClass()
+BOOL CQButton::RegisterWindowClass()
 {
     WNDCLASS windowclass;
     HINSTANCE hInstance = AfxGetInstanceHandle();
-    if (!(::GetClassInfo(hInstance, CName2, &windowclass))) {
+    if (!(::GetClassInfo(hInstance, CName6, &windowclass))) {
         windowclass.style = CS_DBLCLKS;
         windowclass.lpfnWndProc = ::DefWindowProc;
         windowclass.cbClsExtra = windowclass.cbWndExtra = 0;
@@ -47,7 +47,7 @@ BOOL CSButton::RegisterWindowClass()
         windowclass.hCursor = AfxGetApp()->LoadStandardCursor(IDC_HAND);
         windowclass.hbrBackground = ::GetSysColorBrush(COLOR_WINDOW);
         windowclass.lpszMenuName = NULL;
-        windowclass.lpszClassName = CName2;
+        windowclass.lpszClassName = CName6;
         if (!AfxRegisterClass(&windowclass))
         {
             AfxThrowResourceException();
@@ -56,20 +56,25 @@ BOOL CSButton::RegisterWindowClass()
     }
     return true;
 }
-void CSButton::OnPaint()
+void CQButton::OnPaint()
 {
     CPaintDC dc(this);
     dc.SelectObject(m_font);
     CRect rt;
     this->GetClientRect(rt);
     dc.FillSolidRect(rt, RGB(200, 200, 200));
-    dc.DrawText(L"课程表", rt, DT_LEFT);
+    rt.bottom -= 5;
+    rt.top += 5;
+    rt.right -= 5;
+    rt.left += 5;
+    POINT pts[5] = { {rt.left,rt.top},{rt.right,rt.bottom}, {(rt.left + rt.right) / 2,(rt.top + rt.bottom) / 2} ,{rt.left,rt.bottom},{rt.right+1,rt.top-1} };
+    dc.Polyline(pts, 5);
     // TODO: 在此处添加消息处理程序代码
     // 不为绘图消息调用 CWnd::OnPaint()
 }
 
 
-BOOL CSButton::OnEraseBkgnd(CDC* pDC)
+BOOL CQButton::OnEraseBkgnd(CDC* pDC)
 {
     //return true;
     return CWnd::OnEraseBkgnd(pDC);
@@ -77,17 +82,23 @@ BOOL CSButton::OnEraseBkgnd(CDC* pDC)
 }
 
 
-void CSButton::OnLButtonDown(UINT nFlags, CPoint point)
+void CQButton::OnLButtonDown(UINT nFlags, CPoint point)
 {
     // TODO: 在此添加消息处理程序代码和/或调用默认值
 
-    CWnd::OnLButtonDown(nFlags, point); 
+    CWnd::OnLButtonDown(nFlags, point);
     CRect rect;
     GetClientRect(rect);
     //判断鼠标的位置是否在控件里面
     if (rect.PtInRect(point))
     {
-        ShellExecute(NULL, _T("open"),GetPath(0), NULL, NULL, SW_SHOW);
+        int re = quitdlg.DoModal();
+        if (re==4) {
+            this->GetParent()->DestroyWindow();
+        }
+        if (re == 5) {
+            this->GetParent()->PostMessage(WM_SYSCOMMAND,SC_MINIMIZE);
+        }
     }
 
 }

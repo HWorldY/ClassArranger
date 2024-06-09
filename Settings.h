@@ -25,26 +25,38 @@
 #define SCHEDULE_HEIGHT 800
 //Message
 #define WM_GET_DIALOG_CSTRING		(WM_USER + 200)
+#define WM_SHOWTASK (WM_USER+201)
 //Number
 #define NUM_LESSON 12
-//
-#define RELATIVEPATH 0
+
 class SettingsDlg;
 class Settings {
 public:
-	int SettingNum = 20;
-	int ItemNum;
-
 	CString DName;
 	int ScheduleChoice;
 	CString cn;
 
-	CString path;
+	SettingsDlg* dlg;
+
 	Settings(CString path, WCHAR start, WCHAR end,CString format);
 	~Settings();
-	CString format;
-	SettingsDlg* dlg;
-	CString* settings[20];
+
+	bool AddSettings(CString setting, CString format=L"");
+	bool ReadSetting();
+	bool TransSettings();
 	CString* GetSetting(CString item);
 	void SaveSettings();
+
+private:
+	int SettingNum = 20;
+	int ItemNum;
+
+	WCHAR start, end;
+	CString path;
+
+	CString format;
+	CString* settings[20];
+
+	CString SName[20];
+	int SNum=0;
 };

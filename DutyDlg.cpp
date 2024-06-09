@@ -13,8 +13,7 @@
 IMPLEMENT_DYNAMIC(DutyDlg, CDialogEx)
 
 DutyDlg::DutyDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_DIALOG_DUTY, pParent)
-	, m_dstr(_T("输入姓名"))
+	: CDialogEx(IDD_DUTY_DIALOG, pParent)
 {
 }
 
@@ -25,13 +24,13 @@ DutyDlg::~DutyDlg()
 void DutyDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_EDIT1, m_dedit);
-	DDX_Text(pDX, IDC_EDIT1, m_dstr);
+	DDX_Control(pDX, IDC_EDIT_DUTY, m_dedit);
+	DDX_Text(pDX, IDC_EDIT_DUTY, m_dstr);
 }
 
 
 BEGIN_MESSAGE_MAP(DutyDlg, CDialogEx)
-	ON_BN_CLICKED(IDC_BUTTON, &DutyDlg::OnBnClickedButton)
+	ON_BN_CLICKED(IDC_BUTTON_DUTY, &DutyDlg::OnBnClickedButton)
 END_MESSAGE_MAP()
 
 // DutyDlg 消息处理程序
@@ -39,7 +38,7 @@ END_MESSAGE_MAP()
 
 void DutyDlg::OnBnClickedButton()
 {
-	GetDlgItemText(IDC_EDIT1, m_dstr);
+	GetDlgItemText(IDC_EDIT_DUTY, m_dstr);
 	EndDialog(1);
 	// TODO: 在此添加控件通知处理程序代码
 }

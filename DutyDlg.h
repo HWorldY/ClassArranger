@@ -13,7 +13,7 @@ public:
 	virtual ~DutyDlg();
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_DIALOG_DUTY };
+	enum { IDD = IDD_DUTY_DIALOG };
 #endif
 
 protected:

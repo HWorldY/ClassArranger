@@ -8,8 +8,9 @@ BEGIN_MESSAGE_MAP(CDButton, CWnd)
     ON_WM_ERASEBKGND()
     ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
-CDButton::CDButton()
+CDButton::CDButton(Settings* settings)
 {
+    this->m_set = settings;
     CDButton::RegisterWindowClass();
 
     LOGFONT lf = {};
@@ -44,7 +45,7 @@ BOOL CDButton::RegisterWindowClass()
         windowclass.cbClsExtra = windowclass.cbWndExtra = 0;
         windowclass.hInstance = hInstance;
         windowclass.hIcon = NULL;
-        windowclass.hCursor = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
+        windowclass.hCursor = AfxGetApp()->LoadStandardCursor(IDC_HAND);
         windowclass.hbrBackground = ::GetSysColorBrush(COLOR_WINDOW);
         windowclass.lpszMenuName = NULL;
         windowclass.lpszClassName = CName4;
@@ -63,7 +64,7 @@ void CDButton::OnPaint()
     CRect rt;
     this->GetClientRect(rt);
     dc.FillSolidRect(rt, RGB(200, 200, 200));
-    dc.DrawText(L"值日生", rt, DT_LEFT);
+    dc.DrawText((CString)L"值日生", rt, DT_LEFT);
     // TODO: 在此处添加消息处理程序代码
     // 不为绘图消息调用 CWnd::OnPaint()
 }
@@ -87,8 +88,10 @@ void CDButton::OnLButtonDown(UINT nFlags, CPoint point)
     //判断鼠标的位置是否在控件里面
     if (rect.PtInRect(point))
     {
-        //GetParent()->DestroyWindow();
-        if(dutydlg.DoModal()==1)this->GetParent()->PostMessage(WM_GET_DIALOG_CSTRING, (long long int)&dutydlg.m_dstr, 0);
+        dutydlg.m_dstr = m_set->DName;
+        if (dutydlg.DoModal() == 1) {
+            this->GetParent()->PostMessage(WM_GET_DIALOG_CSTRING, (long long int) & dutydlg.m_dstr, 0);
+        }
     }
 
 }

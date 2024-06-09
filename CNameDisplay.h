@@ -1,20 +1,24 @@
 #pragma once
-#define CName4  _T("CDButton")
+#include"pch.h"
+
 #include"Settings.h"
-#include"DutyDlg.h"
-class CDButton :
+#include <afxwin.h>
+#define CName5  _T("CNameDisplay")
+#ifdef AFX_DESIGN_TIME
+enum { IDC = IDC_CNAMEDISPLAY };
+#endif
+
+class CNameDisplay :
 	public CWnd {
 public:
-	CDButton(Settings* settings);
-	~CDButton();
-	DECLARE_DYNAMIC(CDButton);
-public:
-	DutyDlg dutydlg;
-	CFont m_font;
+	CNameDisplay();
+	~CNameDisplay();
+	DECLARE_DYNAMIC(CNameDisplay);
 	Settings* m_set;
 protected:
 	DECLARE_MESSAGE_MAP()
 	BOOL RegisterWindowClass();
+	CFont m_font;
 public:
 	afx_msg void OnPaint();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);

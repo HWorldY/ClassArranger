@@ -2,7 +2,6 @@
 #include "CSchedule.h"
 #include "resource.h"
 #include"Transparent.h"
-#include"Lessons.h"
 #include"StrConvert.h"
 IMPLEMENT_DYNAMIC(CSchedule, CWnd)
 BEGIN_MESSAGE_MAP(CSchedule, CWnd)
@@ -12,18 +11,19 @@ END_MESSAGE_MAP()
 
 CSchedule::CSchedule(Settings* set)
 {
+    CSchedule::RegisterWindowClass();
+
     m_set = set;
+
     CTime time = CTime::GetCurrentTime();
     CString str = time.Format("%w");
     int week = ((str == "0") ? 7 : str == "1" ? 1 : str == "2" ? 2 : str == "3" ?
         3 : str == "4" ? 4 : str == "5" ? 5 : str == "6" ? 6 : 1)-1;
     if (this->m_set->ScheduleChoice != 8)str.Format(L"%d", this->m_set->ScheduleChoice);
-    CSchedule::RegisterWindowClass();
-    CString BPath(RELATIVEPATH?L"D://cpp//P//Projects//ClassArranger//x64//Release//":L"");//在setting中更改RELATIVEPATH以调试
-    CString FilePath=BPath+str + ".txt"; //此处可换成绝对路径
+    CString FilePath=GetPath(0) + str + ".txt";
     CFile file;
     file.Open(FilePath, CFile::modeRead);
-    INT size = file.GetLength();
+    int size = file.GetLength();
     char* buffer = new char[size + 1];
     file.Read(buffer, size * sizeof(char));
     CString cont=AnsiToUnicode(buffer);

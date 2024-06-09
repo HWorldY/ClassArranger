@@ -125,3 +125,15 @@ void DivideString(CString str, CString items[], CString format) {
 		}
 	}
 }
+
+CString GetPath(bool IsComplete)
+{
+	TCHAR pFileName[MAX_PATH] = {};
+	GetModuleFileName(NULL, pFileName, MAX_PATH);
+	CString path(pFileName);
+	if(IsComplete)return path;
+	else {
+		int pos = path.ReverseFind('\\');
+		return path.Left(pos)+(CString)"\\";
+	}
+}

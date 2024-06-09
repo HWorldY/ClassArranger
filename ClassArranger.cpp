@@ -6,7 +6,7 @@
 #include "framework.h"
 #include "ClassArranger.h"
 #include "ClassArrangerDlg.h"
-
+#include"CPublicData.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -39,8 +39,8 @@ CClassArrangerApp theApp;
 // CClassArrangerApp 初始化
 
 BOOL CClassArrangerApp::InitInstance()
-{
-	HANDLE m_hMutex = CreateMutex(NULL, true, m_pszAppName);
+{	
+	CPublicData::CrtMutex();
 	if (GetLastError() == ERROR_ALREADY_EXISTS) {
 		AfxMessageBox(L"程序已经运行");
 		return false;

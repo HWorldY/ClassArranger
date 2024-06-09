@@ -8,7 +8,8 @@
 #include"CDutyDisplay.h"
 #include"CDButton.h"
 #include"Settings.h"
-#include"NameDisplay.h"
+#include"CNameDisplay.h"
+#include"CQButton.h"
 // CClassArrangerDlg 对话框
 class CClassArrangerDlg : public CDialogEx
 {
@@ -16,6 +17,9 @@ class CClassArrangerDlg : public CDialogEx
 public:
 	CClassArrangerDlg(CWnd* pParent = nullptr);	// 标准构造函数
 	~CClassArrangerDlg();
+
+	void ToTray();
+	void DeleteTray();
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
@@ -35,17 +39,22 @@ protected:
 	CFont m_font;
 	CSchedule* m_schedule;
 	CDutyDisplay* m_duty;
-	CDButton m_dbutton;
+	CDButton* m_dbutton;
 	CSButton m_sbutton;
-	NameDisplay m_cm;
+	CNameDisplay m_cm;
+	CQButton m_quit;
+	BOOL MoveCtrl(int x, int y);
+
+
+public:
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg LRESULT OnUpdateCString(WPARAM w, LPARAM l);// 自定义消息处理函数
+	afx_msg LRESULT OnShowTask(WPARAM wParam,LPARAM lParam) ;
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-	BOOL MoveCtrl(int x, int y);
 	DECLARE_MESSAGE_MAP()
-public:
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg LRESULT OnUpdateCString(WPARAM w, LPARAM l);// 自定义消息处理函数
 };

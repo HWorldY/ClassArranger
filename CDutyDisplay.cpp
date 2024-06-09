@@ -29,7 +29,7 @@ CDutyDisplay::CDutyDisplay(Settings* set)
     lf.lfPitchAndFamily = DEFAULT_PITCH;
     wcscpy_s(lf.lfFaceName, L"宋体");
     m_dfont.CreateFontIndirect(&lf);
-    m_dstr = set->GetSetting(L"值日生")[1];
+    m_dstr = set->GetSetting(L"SOD")[1];
 }
 
 CDutyDisplay::~CDutyDisplay()

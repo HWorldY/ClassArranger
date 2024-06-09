@@ -5,15 +5,16 @@
 class CDutyDisplay :
 	public CWnd {
 public:
+	CDutyDisplay(Settings* set);
+	~CDutyDisplay();
+	DECLARE_DYNAMIC(CDutyDisplay);
+public:
 	CFont m_dfont;
 	int m_dheight;
 	int m_dwidth;
 	COLORREF m_dcolor;
 	CString m_dstr;
 	Settings* m_set;
-	CDutyDisplay(Settings* set);
-	~CDutyDisplay();
-	DECLARE_DYNAMIC(CDutyDisplay);
 protected:
 	DECLARE_MESSAGE_MAP()
 	BOOL RegisterWindowClass();

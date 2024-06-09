@@ -41,14 +41,11 @@ int SettingsDlg::CheckPowerBoot()
 		if (lRet != ERROR_SUCCESS)
 			MessageBox(_T("打开启动项失败"));
 
-		//找到程序自身路径
-		TCHAR pFileName[MAX_PATH] = {};
-		GetModuleFileName(NULL, pFileName, MAX_PATH);
 
 		//判断是否已经设置开机启动
 		TCHAR PowerBoot[MAX_PATH] = {};
 		DWORD nLongth = MAX_PATH;
-		long result = RegGetValue(hKey, NULL, _T("CA"), RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
+		long result = RegGetValue(hKey, NULL, _T("CASetup"), RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
 		if (result == ERROR_SUCCESS)
 		{
 	return 1;
@@ -83,11 +80,11 @@ int SettingsDlg::SwitchPowerBoot()
 		//判断是否已经设置开机启动
 		TCHAR PowerBoot[MAX_PATH] = {};
 		DWORD nLongth = MAX_PATH;
-		long result = RegGetValue(hKey, NULL, _T("CA"), RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
+		long result = RegGetValue(hKey, NULL, _T("CASetup"), RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
 		if (result == ERROR_SUCCESS)        //自启状态
 		{
 			//取消自动启动
-			lRet = RegDeleteValue(hKey, _T("CA"));
+			lRet = RegDeleteValue(hKey, _T("CASetup"));
 			if (lRet == ERROR_SUCCESS)
 			{
 				//MessageBox(_T("关闭自启成功"));
@@ -96,7 +93,7 @@ int SettingsDlg::SwitchPowerBoot()
 		else        //未自启状态
 		{
 			//设置自启
-			lRet = RegSetValueEx(hKey, _T("CA"), 0, REG_SZ, (LPBYTE)pFileName, (lstrlen(pFileName) + 1) * sizeof(TCHAR));
+			lRet = RegSetValueEx(hKey, _T("CASetup"), 0, REG_SZ, (LPBYTE)pFileName, (lstrlen(pFileName) + 1) * sizeof(TCHAR));
 			if (lRet == ERROR_SUCCESS)
 			{
 				//MessageBox(_T("设置自启成功"));
@@ -123,7 +120,6 @@ void SettingsDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(SettingsDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &SettingsDlg::OnBnClickedOk)
-	ON_CBN_SELCHANGE(IDC_COMBO_SCHEDULE, &SettingsDlg::OnCbnSelchangeComboSchedule)
 	ON_BN_CLICKED(IDC_BUTTON_ABOUT, &SettingsDlg::OnBnClickedButtonAbout)
 END_MESSAGE_MAP()
 
@@ -137,8 +133,14 @@ END_MESSAGE_MAP()
 void SettingsDlg::OnBnClickedOk()
 {
 	if(m_autorun.GetCheck()!=CheckPowerBoot())SwitchPowerBoot();
-	GetDlgItemText(IDC_EDIT_CLASSNAME, this->m_set->cn);
+	GetDlgItemText(IDC_EDIT_CLASSNAME, m_classname);
+	ScheduleChoice = m_scombo.GetCurSel();
+
+	this->m_set->cn = m_classname;
+	this->m_set->ScheduleChoice = ScheduleChoice;
+
 	this->m_set->SaveSettings();
+
 	extern CClassArrangerApp theApp;
 
 	TCHAR szAppName[MAX_PATH];
@@ -153,6 +155,7 @@ void SettingsDlg::OnBnClickedOk()
 	memset(&StartInfo, 0, sizeof(STARTUPINFO));
 	StartInfo.cb = sizeof(STARTUPINFO);
 	// 最重要的环节，产生一个新的进程
+	CPublicData::DelMutex();
 	::CreateProcess(
 		(LPCTSTR)strAppFullName,
 		NULL,
@@ -167,18 +170,7 @@ void SettingsDlg::OnBnClickedOk()
 	// 终止原来的程序
 	::TerminateProcess(::GetCurrentProcess(), 0);
 
-
-	CDialogEx::OnOK();
-}
-
-
-
-
-void SettingsDlg::OnCbnSelchangeComboSchedule()
-{
-	int temp = m_scombo.GetCurSel();
-	this->m_set->ScheduleChoice = temp;
-	// TODO: 在此添加控件通知处理程序代码
+	//CDialogEx::OnOK();
 }
 
 

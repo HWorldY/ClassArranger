@@ -3,6 +3,34 @@
 #include"SettingsDlg.h"
 Settings::Settings(CString path, WCHAR start, WCHAR end, CString format)
 {
+	this->path = path;
+	this->format = format;
+	this->start = start;
+	this->end = end;
+
+	this->dlg = new SettingsDlg;
+	this->dlg->m_set = this;
+
+	ReadSetting();
+}
+
+Settings::~Settings()
+{
+	for (int m = 0; m <= this->SettingNum - 1; m++) {
+		delete[] this->settings[m];
+	}
+	delete this->dlg;
+}
+//TODO:format
+bool Settings::AddSettings(CString setting, CString format)
+{
+	SName[SNum] = setting;
+	SNum++;
+	return true;
+}
+
+bool Settings::ReadSetting()
+{
 	CFile f;
 	int flen = format.GetLength();
 	this->ItemNum = 0;
@@ -22,23 +50,16 @@ Settings::Settings(CString path, WCHAR start, WCHAR end, CString format)
 		delete[] s;
 	}
 	f.Close();
-	this->path = path;
-	this->format = format;
-
-	this->dlg = new SettingsDlg;
-	this->dlg->m_set = this;
-
-	this->ScheduleChoice = _ttoi(GetSetting(L"Schedule")[1]);
-	this->cn = GetSetting(L"ClassName")[1];
-	this->DName = GetSetting(L"值日生")[1];
+	TransSettings();
+	return true;
 }
 
-Settings::~Settings()
+bool Settings::TransSettings()
 {
-	for (int m = 0; m <= this->SettingNum - 1; m++) {
-		delete[] this->settings[m];
-	}
-	delete this->dlg;
+	this->ScheduleChoice = _ttoi(GetSetting(L"Schedule")[1]);
+	this->cn = GetSetting(L"ClassName")[1];
+	this->DName = GetSetting(L"SOD")[1];
+	return true;
 }
 
 CString* Settings::GetSetting(CString item)
@@ -52,7 +73,7 @@ void Settings::SaveSettings()
 {
 	GetSetting(L"ClassName")[1] = cn;
 	GetSetting(L"Schedule")[1].Format(L"%d",this->ScheduleChoice);
-	GetSetting(L"值日生")[1] = DName;
+	GetSetting(L"SOD")[1] = DName;
 
 	CFile f;
 	int index = 0;

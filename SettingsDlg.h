@@ -1,12 +1,15 @@
 #pragma once
 #include "afxdialogex.h"
 #include"Settings.h"
+#include"CPublicData.h"
 class SettingsDlg :public CDialogEx
 {
 	DECLARE_DYNAMIC(SettingsDlg)
 
 public:
 	CString m_classname;
+	int ScheduleChoice;
+
 	CComboBox m_scombo;
 	CButton m_autorun;
 	CEdit m_cnedit;
@@ -27,7 +30,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOk();
-	afx_msg void OnCbnSelchangeComboSchedule();
 	afx_msg void OnBnClickedButtonAbout();
 };
 
