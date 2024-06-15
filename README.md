@@ -1,4 +1,4 @@
-## Developint Tool
+## Developing Tool
 Created with MFC.
 ## Preparations for Using Releases 
 To use this application,create .txt files as following:
@@ -15,6 +15,6 @@ To use this application,create .txt files as following:
 > '[Schedule:1]
 > [SOD:NAME]
 > [ClassName:0]'
-## Future Plans
+## Future Plan
 1. The Application will no longer be update on MFC platform.
 2. Other platform.(Qt,WinUI 3,etc)
