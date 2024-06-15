@@ -11,10 +11,9 @@ To use this application,create .txt files as following:
 - 6.txt
 - 7.txt
 - Settings.txt
-> Format:
 > '[Schedule:1]
 > [SOD:NAME]
 > [ClassName:0]'
 ## Future Plan
-1. The Application will no longer be update on MFC platform.
-2. Other platform.(Qt,WinUI 3,etc)
+1. The Application will no longer be updated on MFC platform.
+2. Other platforms.(Qt,WinUI 3,etc)
